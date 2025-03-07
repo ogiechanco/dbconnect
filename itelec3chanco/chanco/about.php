@@ -32,58 +32,92 @@
                             <div class="card-body">
                                 DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
                                 <a target="_blank" href="https://datatables.net/">official DataTables documentation</a>
-                                .
+                                    .</br>
+                                <a href="" class="btn btn-primary">Add New Record</a>
                             </div>
                         </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                DataTable Example
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Title</th>
-                                            <th>Content</th>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="nav-records-tab" data-bs-toggle="tab" data-bs-target="#abouttable" type="button" role="tab" aria-controls="abouttable" aria-selected="true">Records</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="nav-DE-tab" data-bs-toggle="tab" data-bs-target="#aboutDE" type="button" role="tab" aria-controls="aboutDE" aria-selected="false">Data Entry</button>
+                            </li>
+                        </ul>
+                        
 
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                             <th>ID</th>
-                                            <th>Title</th>
-                                            <th>Content</th>
-                            
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <?php
-                                            try {
-                                                $sqlabout="SELECT * FROM about";
-                                                $stmtabout=$con->prepare($sqlabout);
-                                                $stmtabout->execute();
-                                                $strtable="";
-                                                while($row= $stmtabout->fetch()){
-                                                    $strtable.="<tr>";
-                                                    $strtable.="<td>{$row[0]}<td>";
-                                                    $strtable.="<td>{$row[1]}<td>";
-                                                    $content=substr(nl2br($row[2]), 0, 200);
-                                                    $strtable.="<td>{$content}...<td>";
-                                                    $strtable.="<td>Buttons dito<td>";
-                                                    $strtable.="</td>";
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="card mb-4 tab-pane fade show active p-5"  id="abouttable" aria-labelledby="nav-records-tab" role="tabpanel" tabindex="0">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    DataTable Example
+                                </div>
+                                
+                                <div class="card-body">
+                                    <table id="datatablesSimple">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Title</th>
+                                                <th>Content</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Title</th>
+                                                <th>Content</th>
+                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <?php
+                                                try {
+                                                    $sqlabout="SELECT * FROM about";
+                                                    $stmtabout=$con->prepare($sqlabout);
+                                                    $stmtabout->execute();
+                                                    $strtable="";
+                                                    while($row= $stmtabout->fetch()){
+                                                        $strtable.="<tr>";
+                                                        $strtable.="<td>{$row[0]}<td>";
+                                                        $strtable.="<td>{$row[1]}<td>";
+                                                        $content=substr(nl2br($row[2]), 0, 200);
+                                                        $strtable.="<td>{$content}...<td>";
+                                                        $strtable.="<td>Buttons dito<td>";
+                                                        $strtable.="</td>";
+                                                    }
+                                                    echo $strtable;
+                                                } catch (PDOException $th) {
+                                                    echo $th->getmessage();
                                                 }
-                                                echo $strtable;
-                                            } catch (PDOException $th) {
-                                                echo $th->getmessage();
-                                            }
-                                        ?>
-                                        
-                                    </tbody>
-                                </table>
+                                            ?>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class=" mb-4 p-5 tab-pane fade" id="aboutDE" role="tabpanel" aria-labelledby="nav-DE-tab" tabindex="0">
+                                <h1>Data Entry:</h1>
+                                    <div class="data-entry">
+                                    <div class="mb-3">
+                                        <form action="saveabout.php" method="POST">
+                                            <label for="exampleFormControlInput1" class="form-label">Title:</label>
+                                            <input type="text" class="form-control" name="txttitle" id="exampleFormControlInput1" placeholder="">
+                                            </div>
+                                            <div class="mb-3">
+                                            <label for="exampleFormControlTextarea1" class="form-label">Content:</label>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1" name="txtcontent" rows="3"></textarea>
+                                            </div>
+                                            <button class="btn btn-primary">Submit</button>
+                                        </form>
+                                                     
+                                    </div>
+                                
                             </div>
                         </div>
+                        
                     </div>
                 </main>
                 <!-- Footer -->
