@@ -1,5 +1,26 @@
 <?php
     require_once("includes/dbconnect.php");
+
+    
+    if(isset($_GET['udid'])){
+        $id = $_GET['udid'];
+        try {
+            $sqlLoad = "SELECT * FROM about WHERE aboutID = ?";
+            $dataLoad = array($id);
+            $stmtLoad = $con->prepare($sqlLoad);
+            $stmtLoad->execute($dataLoad);
+            $rowLoad = $stmtLoad->fetch();
+            $title = $rowLoad[1];
+            $laman = $rowLoad[2];
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
+    else {
+            $title ="";
+            $laman = "";
+    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +33,7 @@
         <meta name="author" content="" />
         <title>Tables - SB Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
@@ -84,7 +106,17 @@
                                                         $strtable.="<td>{$row[1]}<td>";
                                                         $content=substr(nl2br($row[2]), 0, 200);
                                                         $strtable.="<td>{$content}...<td>";
-                                                        $strtable.="<td>Buttons dito<td>";
+                                                        $strDelButton="<button class='btn btn-warning'>
+                                                                        <a href='saveabout.php?delid={$row[0]}'>
+                                                                        <i class='bx bxs-trash'></i>
+                                                                        </a>
+                                                                        </button>";
+                                                        $strUpdateButton="<button class='btn btn-info'>
+                                                                        <a href='about.php?udid={$row[0]}'>
+                                                                        <i class='bx bxs-edit-alt'></i>
+                                                                        </a>
+                                                                        </button>";
+                                                        $strtable.="<td> <div style ='white-space:nowrap'>{$strUpdateButton} {$strDelButton} </div> <td>";
                                                         $strtable.="</td>";
                                                     }
                                                     echo $strtable;
@@ -103,12 +135,15 @@
                                     <div class="data-entry">
                                     <div class="mb-3">
                                         <form action="saveabout.php" method="POST">
+                                            <?php if (isset($id)) { ?>
+                                                <input type="hidden" name="udid" value="<?= htmlspecialchars($id) ?>" />
+                                            <?php } ?>
                                             <label for="exampleFormControlInput1" class="form-label">Title:</label>
-                                            <input type="text" class="form-control" name="txttitle" id="exampleFormControlInput1" placeholder="">
+                                            <input type="text" class="form-control" name="txttitle" value ="<?=$title?>" id="exampleFormControlInput1" placeholder="">
                                             </div>
                                             <div class="mb-3">
                                             <label for="exampleFormControlTextarea1" class="form-label">Content:</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" name="txtcontent" rows="3"></textarea>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1" name="txtcontent" rows="3" required><?=$laman?></textarea>
                                             </div>
                                             <button class="btn btn-primary">Submit</button>
                                         </form>
