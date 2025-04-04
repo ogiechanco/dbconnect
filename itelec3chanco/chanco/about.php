@@ -1,17 +1,20 @@
 <?php
     require_once("includes/dbconnect.php");
-
+    
     
     if(isset($_GET['udid'])){
         $id = $_GET['udid'];
         try {
-            $sqlLoad = "SELECT * FROM about WHERE aboutID = ?";
+            $sqlLoad = "SELECT aboutID, atitle, acontent, md5(aboutID) FROM about WHERE md5(aboutID) = ?";
             $dataLoad = array($id);
             $stmtLoad = $con->prepare($sqlLoad);
             $stmtLoad->execute($dataLoad);
-            $rowLoad = $stmtLoad->fetch();
-            $title = $rowLoad[1];
-            $laman = $rowLoad[2];
+            if($stmtLoad->rowCount()!= 0){
+                $rowLoad = $stmtLoad->fetch();
+                $title = $rowLoad[1];
+                $laman = $rowLoad[2];
+            }
+            
         } catch (PDOException $th) {
             echo $th->getMessage();
         }
@@ -96,7 +99,7 @@
                                         <tbody>
                                             <?php
                                                 try {
-                                                    $sqlabout="SELECT * FROM about";
+                                                    $sqlabout="SELECT aboutID, atitle, acontent, md5(aboutID) FROM about";
                                                     $stmtabout=$con->prepare($sqlabout);
                                                     $stmtabout->execute();
                                                     $strtable="";
@@ -106,17 +109,17 @@
                                                         $strtable.="<td>{$row[1]}<td>";
                                                         $content=substr(nl2br($row[2]), 0, 200);
                                                         $strtable.="<td>{$content}...<td>";
-                                                        $strDelButton="<button class='btn btn-warning'>
-                                                                        <a href='saveabout.php?delid={$row[0]}'>
-                                                                        <i class='bx bxs-trash'></i>
+                                                        $strDelButton="<button class='btn btn-danger'>
+                                                                        <a href='saveabout.php?delid={$row[3]}'>
+                                                                        <i class='bx bxs-trash' style='color:#000'></i>
                                                                         </a>
                                                                         </button>";
-                                                        $strUpdateButton="<button class='btn btn-info'>
-                                                                        <a href='about.php?udid={$row[0]}'>
-                                                                        <i class='bx bxs-edit-alt'></i>
+                                                        $strUpdateButton="<button class='btn btn-warning'>
+                                                                        <a href='about.php?udid={$row[3]}'>
+                                                                        <i class='bx bxs-edit-alt' style='color:#000'></i>
                                                                         </a>
                                                                         </button>";
-                                                        $strtable.="<td> <div style ='white-space:nowrap'>{$strUpdateButton} {$strDelButton} </div> <td>";
+                                                        $strtable.="<td><div style ='white-space:nowrap'> {$strUpdateButton} {$strDelButton} </div><td>";
                                                         $strtable.="</td>";
                                                     }
                                                     echo $strtable;
@@ -135,9 +138,7 @@
                                     <div class="data-entry">
                                     <div class="mb-3">
                                         <form action="saveabout.php" method="POST">
-                                            <?php if (isset($id)) { ?>
-                                                <input type="hidden" name="udid" value="<?= htmlspecialchars($id) ?>" />
-                                            <?php } ?>
+                                            <input type="hidden" name="txtid" value="<?=$id?>" />
                                             <label for="exampleFormControlInput1" class="form-label">Title:</label>
                                             <input type="text" class="form-control" name="txttitle" value ="<?=$title?>" id="exampleFormControlInput1" placeholder="">
                                             </div>

@@ -9,7 +9,7 @@ if(isset($_GET['udid'])){
     $content = $_POST['txtcontent'];
     #echo "{$title} - {$content}";
     try {
-        $sql="UPDATE about SET atitle = ?, acontent = ? WHERE aboutID = ?";
+        $sql="UPDATE about SET atitle = ?, acontent = ? WHERE md5(aboutID) = ?";
         $data = array($title, $content, $id);
         $stmt = $con->prepare($sql);
         $stmt->execute($data);
@@ -20,7 +20,7 @@ if(isset($_GET['udid'])){
 }
 
 if(isset($_GET['delid'])){
-    $delSQL = "DELETE FROM about WHERE aboutID = ?";
+    $delSQL = "DELETE FROM about WHERE md5(aboutID) = ?";
     $data = array($_GET['delid']);
     try {
         $stmtDel = $con->prepare($delSQL);
@@ -30,29 +30,29 @@ if(isset($_GET['delid'])){
         echo $th->getMessage();
     }
 }
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if(isset($_POST['txttitle'])){
     $title = $_POST['txttitle'] ?? '';
     $content = $_POST['txtcontent'] ?? '';
-    $id = $_POST['udid'] ?? null;
+    $id = $_POST['txtid'] ?? null;
     #echo "{$title} - {$content}";
     try {
-        if($id){
-            $title = $_POST['txttitle'];
-            $content = $_POST['txtcontent'];
-            #echo "{$title} - {$content}";
-                $sql="UPDATE about SET atitle = ?, acontent = ? WHERE aboutID = ?";
-                $data = array($title, $content, $id);
-                $stmt = $con->prepare($sql);
-                $stmt->execute($data);
-                header("location:about.php");
-                exit;
-        }else{
+        if($id == 0){
             $sql="INSERT INTO about(atitle, acontent) VALUES(?, ?)";
             $data = array($title, $content);
             $stmt = $con->prepare($sql);
             $stmt->execute($data);
             header("location:about.php");
             exit;
+        }else{
+            $title = $_POST['txttitle'];
+            $content = $_POST['txtcontent'];
+            #echo "{$title} - {$content}";
+                $sql="UPDATE about SET atitle = ?, acontent = ? WHERE md5(aboutID)  = ?";
+                $data = array($title, $content, $id);
+                $stmt = $con->prepare($sql);
+                $stmt->execute($data);
+                header("location:about.php");
+                exit;
         }
         
     } catch (PDOException $th) {
