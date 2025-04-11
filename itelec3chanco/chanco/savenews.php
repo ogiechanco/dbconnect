@@ -2,12 +2,12 @@
 require_once("includes/dbconnect.php");
 
 if(isset($_POST['txttitle'])){
-    $title = $_POST['txttitle'];
-    $author = $_POST['txtauthor'];
+    $title = htmlspecialchars($_POST['txttitle']);
+    $author = htmlspecialchars($_POST['txtauthor']);
     $id = $_POST['txtid'];
-    $dposted = $_POST['dposted'];
-    $story = $_POST['txtstory'];
-    $picture = $_POST['picture'];
+    $dposted = htmlspecialchars($_POST['dposted']);
+    $story = htmlspecialchars($_POST['txtstory']);
+    $picture = htmlspecialchars($_POST['picture']);
     echo $title . $author . $dposted . $story . $picture;
     try {
         

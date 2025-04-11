@@ -1,6 +1,10 @@
 <?php
     require_once("includes/dbconnect.php");
-
+    
+    $id = 0;
+    $title ="";
+    $author = "";
+    $story = "";
     if(isset($_GET['udid'])){
         $id = $_GET['udid'];
         try {
@@ -67,16 +71,16 @@
                         </div>
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="nav-records-tab" data-bs-toggle="tab" data-bs-target="#abouttable" type="button" role="tab" aria-controls="abouttable" aria-selected="true">Records</button>
+                            <button class="nav-link active" id="nav-records-tab" data-bs-toggle="tab" data-bs-target="#newstable" type="button" role="tab" aria-controls="abouttable" aria-selected="true">Records</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="nav-DE-tab" data-bs-toggle="tab" data-bs-target="#aboutDE" type="button" role="tab" aria-controls="aboutDE" aria-selected="false">Data Entry</button>
+                            <button class="nav-link" id="nav-DE-tab" data-bs-toggle="tab" data-bs-target="#newsDE" type="button" role="tab" aria-controls="aboutDE" aria-selected="false">Data Entry</button>
                             </li>
                         </ul>
                         
 
                         <div class="tab-content" id="nav-tabContent">
-                            <div class="card mb-4 tab-pane fade show active p-5"  id="abouttable" aria-labelledby="nav-records-tab" role="tabpanel" tabindex="0">
+                            <div class="card mb-4 tab-pane fade show active p-5"  id="newstable" aria-labelledby="nav-records-tab" role="tabpanel" tabindex="0">
                                 <div class="card-header">
                                     <i class="fas fa-table me-1"></i>
                                     DataTable Example
@@ -92,6 +96,7 @@
                                                 <th>Date Posted</th>
                                                 <th>Story</th>
                                                 <th>Picture</th>
+                                                <th>Actions</th>
 
                                             </tr>
                                         </thead>
@@ -103,11 +108,12 @@
                                                 <th>Date Posted</th>
                                                 <th>Story</th>
                                                 <th>Picture</th>
-                                
+                                                <th>Actions</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
                                             <?php
+                                            
                                                 try {
                                                     $sqlnews="SELECT newsID, title, author, datePosted, story, picture, md5(newsID) FROM news";
                                                     $stmtabout=$con->prepare($sqlnews);
@@ -115,12 +121,12 @@
                                                     $strtable="";
                                                     while($row= $stmtabout->fetch()){
                                                         $strtable.="<tr>";
-                                                        $strtable.="<td>{$row[0]}<td>";
-                                                        $strtable.="<td>{$row[1]}<td>";
+                                                        $strtable.="<td>{$row[0]}</td>";
+                                                        $strtable.="<td>{$row[1]}</td>";
                                                         $istorya=substr(nl2br($row[4]), 0, 200);
-                                                        $strtable.="<td>{$row[2]}<td>";
-                                                        $strtable.="<td>{$row[3]}<td>";
-                                                        $strtable.="<td>{$istorya}...<td>";
+                                                        $strtable.="<td>{$row[2]}</td>";
+                                                        $strtable.="<td>{$row[3]}</td>";
+                                                        $strtable.="<td>{$istorya}...</td>";
                                                         $strtable.="<td>{$row[5]}";
                                                         $strDelButton="<button class='btn btn-danger'>
                                                                         <a href='savenews.php?delid={$row[6]}'>
@@ -132,21 +138,20 @@
                                                                         <i class='bx bxs-edit-alt' style='color:#000'></i>
                                                                         </a>
                                                                         </button>";
-                                                        $strtable.="<td><div style ='white-space:nowrap'> {$strUpdateButton} {$strDelButton} </div><td>";
-                                                        $strtable.="</td>";
+                                                        $strtable.="<td><div style ='white-space:nowrap'> {$strUpdateButton} {$strDelButton} </div></td>";
+                                                        $strtable.="</tr>";
                                                     }
                                                     echo $strtable;
                                                 } catch (PDOException $th) {
                                                     echo $th->getmessage();
                                                 }
-                                            ?>
-                                            
+                                            ?> 
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <div class=" mb-4 p-5 tab-pane fade" id="aboutDE" role="tabpanel" aria-labelledby="nav-DE-tab" tabindex="0">
+                            <div class=" mb-4 p-5 tab-pane fade" id="newsDE" role="tabpanel" aria-labelledby="nav-DE-tab" tabindex="0">
                                 <h1>Data Entry:</h1>
                                     <div class="data-entry">
                                     <div class="mb-3">
@@ -160,11 +165,11 @@
                                             <div class="row mb-3">
                                                 <div class="col-6">
                                                 <label for="exampleFormControlInput1" class="form-label">Author:</label>
-                                                <input type="text" class="form-control" name="txtauthor" value ="<?=$author?>" id="exampleFormControlInput1" placeholder="">
+                                                <input type="text" class="form-control" name="txtauthor" value ="<?=$author?>" id="exampleFormControlInput1" placeholder="" required>
                                                 </div>
                                                 <div class="col-6">
                                                 <label for="exampleFormControlInput1" class="form-label">Date Posted:</label>
-                                                <input type="date" class="form-control" name="dposted" value ="<?=$dposted?>" id="exampleFormControlInput1" placeholder="">
+                                                <input type="date" class="form-control" name="dposted" value ="<?=$dposted?>" id="exampleFormControlInput1" placeholder="" required>
                                                 </div>
                                             </div>
                                 
