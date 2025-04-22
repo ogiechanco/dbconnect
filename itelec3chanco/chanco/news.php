@@ -127,7 +127,12 @@
                                                         $strtable.="<td>{$row[2]}</td>";
                                                         $strtable.="<td>{$row[3]}</td>";
                                                         $strtable.="<td>{$istorya}...</td>";
-                                                        $strtable.="<td>{$row[5]}";
+                                                        $imagePath = $row[5];  // Assuming $row[5] is the image path stored in the database
+                                                        if (!empty($imagePath) && file_exists($imagePath)) {
+                                                            $strtable .= "<td><img src='{$imagePath}' alt='Image' width='100' height='100'></td>";
+                                                        } else {
+                                                            $strtable .= "<td>No Image Available</td>";
+                                                        }
                                                         $strDelButton="<button class='btn btn-danger'>
                                                                         <a href='savenews.php?delid={$row[6]}'>
                                                                         <i class='bx bxs-trash' style='color:#000'></i>
@@ -155,7 +160,7 @@
                                 <h1>Data Entry:</h1>
                                     <div class="data-entry">
                                     <div class="mb-3">
-                                        <form action="savenews.php" method="POST">
+                                        <form action="savenews.php" method="POST" enctype="multipart/form-data">
                                             <div class="mb-3">
                                             <input type="hidden" name="txtid" value="<?=$id?>" />
                                             <label for="exampleFormControlInput1" class="form-label">Title:</label>
