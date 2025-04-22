@@ -16,8 +16,7 @@ if(isset($_POST['txttitle'])){
 
         if($id == 0){
             $sql="INSERT INTO news(title, author, datePosted, story, picture) VALUES(?, ?, ?, ?, ?)";
-            $ext = $file['name'];
-            $data = array($title, $author, $dposted, $story, $ext);
+            $data = array($title, $author, $dposted, $story, $newname);
         }else{
                 $sql="UPDATE news SET title = ?, author = ?, datePosted = ?, story = ?, picture = ? WHERE md5(newsID)  = ?";
                 $data = array($title, $author, $dposted, $story, $picture, $id);

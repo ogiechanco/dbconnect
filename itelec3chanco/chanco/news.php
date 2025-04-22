@@ -127,12 +127,8 @@
                                                         $strtable.="<td>{$row[2]}</td>";
                                                         $strtable.="<td>{$row[3]}</td>";
                                                         $strtable.="<td>{$istorya}...</td>";
-                                                        $imagePath = $row[5];  // Assuming $row[5] is the image path stored in the database
-                                                        if (!empty($imagePath) && file_exists($imagePath)) {
-                                                            $strtable .= "<td><img src='{$imagePath}' alt='Image' width='100' height='100'></td>";
-                                                        } else {
-                                                            $strtable .= "<td>No Image Available</td>";
-                                                        }
+                                                        $strtable .= "<td><img src='uploads/news/{$row[5]}.png' alt='Image' width='100' height='100'></td>";
+                                                        
                                                         $strDelButton="<button class='btn btn-danger'>
                                                                         <a href='savenews.php?delid={$row[6]}'>
                                                                         <i class='bx bxs-trash' style='color:#000'></i>
