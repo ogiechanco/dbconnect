@@ -127,7 +127,8 @@
                                                         $strtable.="<td>{$row[2]}</td>";
                                                         $strtable.="<td>{$row[3]}</td>";
                                                         $strtable.="<td>{$istorya}...</td>";
-                                                        $strtable .= "<td><img src='uploads/news/{$row[5]}.png' alt='Image' width='100' height='100'></td>";
+                                                        $pic = strlen($row[5]) == 0 ? 'nopic.jpg' : $row[5];
+                                                        $strtable .= "<td><img src='uploads/news/{$pic}' alt='Image' width='100' height='100'></td>";
                                                         
                                                         $strDelButton="<button class='btn btn-danger'>
                                                                         <a href='savenews.php?delid={$row[6]}'>
