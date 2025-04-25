@@ -8,7 +8,7 @@ if(isset($_POST['txttitle'])){
     $id = $_POST['txtid'];
     $dposted = htmlspecialchars($_POST['dposted']);
     $story = htmlspecialchars($_POST['txtstory']);
-    $file = ($_FILES['picture']);
+    
     try {
         if($id == 0){
             $sql="INSERT INTO news(title, author, datePosted, story) VALUES(?, ?, ?, ?)";
@@ -25,7 +25,7 @@ if(isset($_POST['txttitle'])){
             $sqlPic= "SELECT newsID FROM news WHERE md5(newsID) = ?";
             $dataPic= array($id);
             $stmtpic=$con->prepare($sqlPic);
-            $stmtpic=execute($dataPic);
+            $stmtpic->execute($dataPic);
             $rowPic=$stmtpic->fetch();
             $newName=$rowPic[0];
         }
@@ -33,7 +33,8 @@ if(isset($_POST['txttitle'])){
         if(!(empty($filename['name']))){
             $upload_directory = "uploads/news/";
             uploadOne($filename, $newName, $upload_directory);
-        } 
+        }
+
         $sqlUpdate= "UPDATE news SET picture=? WHERE newsID=?";
         $extName=end(explode(".", $filename['name']));
         $filename="{$newName}.{$extName}";

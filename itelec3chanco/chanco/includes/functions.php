@@ -13,4 +13,10 @@ function uploadOne($filename, $newname, $upload_directory) {
     return $res;
 }
 
+function cleantext($txt){
+    $cleantext = htmlspecialchars($txt);
+    $cleantext = trim($cleantext);
+
+    return $cleantext;
+}
 ?>

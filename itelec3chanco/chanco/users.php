@@ -1,41 +1,31 @@
 <?php
-    session_start();
     require_once("includes/dbconnect.php");
-    
-    if(!(isset($_SESSION['userID']))){
-        header("location:login.php");
-    }
+
     $id = 0;
-    $title ="";
-    $author = "";
-    $story = "";
+    $fname = NULL;
+    $lname = NULL;
+    $username = NULL;
+    $pword = NULL;
     if(isset($_GET['udid'])){
         $id = $_GET['udid'];
         try {
-            $sqlLoad = "SELECT newsID, title, author, datePosted, story, picture, md5(newsID) FROM news WHERE md5(newsID) = ?";
+            $sqlLoad = "SELECT userID, fname, lname, username, pword, md5(userID) FROM users WHERE md5(userID) = ?";
             $dataLoad = array($id);
             $stmtLoad = $con->prepare($sqlLoad);
             $stmtLoad->execute($dataLoad);
             if($stmtLoad->rowCount()!= 0){
                 $rowLoad = $stmtLoad->fetch();
-                $title = $rowLoad[1];
-                $author = $rowLoad[2];
-                $datePosted = $rowLoad[3];
-                $story = $rowLoad[4];
-                $picture = $rowLoad[5];
+                $fname = $rowLoad[1];
+                $lname = $rowLoad[2];
+                $username = $rowLoad[3];
+                $pword = $rowLoad[4];
             }
             
         } catch (PDOException $th) {
             echo $th->getMessage();
         }
     }
-    else {
-        $id = 0;
-        $title ="";
-        $author = "";
-        $story = "";
-    }
-    
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +36,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>ITELEC - News</title>
+        <title>ITELEC - Users</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <link href="css/styles.css" rel="stylesheet" />
@@ -60,10 +50,10 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">News</h1>
+                        <h1 class="mt-4">Users</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-                            <li class="breadcrumb-item active">News</li>
+                            <li class="breadcrumb-item active">Users</li>
                         </ol>
                         <div class="card mb-4">
                             <div class="card-body">
@@ -94,24 +84,18 @@
                                     <table id="datatablesSimple">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Title</th>
-                                                <th>Author</th>
-                                                <th>Date Posted</th>
-                                                <th>Story</th>
-                                                <th>Picture</th>
+                                                <th>User ID</th>
+                                                <th>Fullname</th>
+                                                <th>Username</th>
                                                 <th>Actions</th>
 
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Title</th>
-                                                <th>Author</th>
-                                                <th>Date Posted</th>
-                                                <th>Story</th>
-                                                <th>Picture</th>
+                                                <th>User ID</th>
+                                                <th>Fullname</th>
+                                                <th>Username</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </tfoot>
@@ -119,7 +103,7 @@
                                             <?php
                                             
                                                 try {
-                                                    $sqlnews="SELECT newsID, title, author, datePosted, story, picture, md5(newsID) FROM news";
+                                                    $sqlnews="SELECT userID, CONCAT(fname, ' ', lname) as fname, username, md5(userID) FROM users";
                                                     $stmtabout=$con->prepare($sqlnews);
                                                     $stmtabout->execute();
                                                     $strtable="";
@@ -127,20 +111,15 @@
                                                         $strtable.="<tr>";
                                                         $strtable.="<td>{$row[0]}</td>";
                                                         $strtable.="<td>{$row[1]}</td>";
-                                                        $istorya=substr(nl2br($row[4]), 0, 200);
                                                         $strtable.="<td>{$row[2]}</td>";
-                                                        $strtable.="<td>{$row[3]}</td>";
-                                                        $strtable.="<td>{$istorya}...</td>";
-                                                        $pic = strlen($row[5]) <= 2 ? 'nopic.jpg' : $row[5];
-                                                        $strtable .= "<td><img src='uploads/news/{$pic}' alt='Image' width='100' height='100'></td>";
                                                         
-                                                        $strDelButton="<button class='btn btn-danger'>
-                                                                        <a href='savenews.php?delid={$row[6]}'>
+                                                        $strDelButton="<button class='btn btn-warning'>
+                                                                        <a href='saveusers.php?delid={$row[3]}'>
                                                                         <i class='bx bxs-trash' style='color:#000'></i>
                                                                         </a>
                                                                         </button>";
-                                                        $strUpdateButton="<button class='btn btn-warning'>
-                                                                        <a href='news.php?udid={$row[6]}'>
+                                                        $strUpdateButton="<button class='btn btn-info'>
+                                                                        <a href='users.php?udid={$row[3]}'>
                                                                         <i class='bx bxs-edit-alt' style='color:#000'></i>
                                                                         </a>
                                                                         </button>";
@@ -161,33 +140,32 @@
                                 <h1>Data Entry:</h1>
                                     <div class="data-entry">
                                     <div class="mb-3">
-                                        <form action="savenews.php" method="POST" enctype="multipart/form-data">
-                                            <div class="mb-3">
-                                            <input type="hidden" name="txtid" value="<?=$id?>" />
-                                            <label for="exampleFormControlInput1" class="form-label">Title:</label>
-                                            <input type="text" class="form-control" name="txttitle" value ="<?=$title?>" id="exampleFormControlInput1" placeholder="">
-                                            </div>
+                                        <form action="saveusers.php" method="POST">
 
+                                            <input type="hidden" name="txtid" value="<?=$id?>" />
+                                            
                                             <div class="row mb-3">
                                                 <div class="col-6">
-                                                <label for="exampleFormControlInput1" class="form-label">Author:</label>
-                                                <input type="text" class="form-control" name="txtauthor" value ="<?=$author?>" id="exampleFormControlInput1" placeholder="" required>
+                                                <label for="txtfname" class="form-label">First Name :</label>
+                                                <input type="text" class="form-control" name="txtfname" value ="<?=$fname?>" id="exampleFormControlInput1" placeholder="" required>
                                                 </div>
                                                 <div class="col-6">
-                                                <label for="exampleFormControlInput1" class="form-label">Date Posted:</label>
-                                                <input type="date" class="form-control" name="dposted" value ="<?=$datePosted?>" id="exampleFormControlInput1" placeholder="" required>
+                                                <label for="txtlname" class="form-label">Last Name :</label>
+                                                <input type="text" class="form-control" name="txtlname" value ="<?=$lname?>" id="exampleFormControlInput1" placeholder="" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mb-3">
+                                            <div class="col-6">
+                                                <label for="txtusername" class="form-label">Username :</label>
+                                                <input type="text" class="form-control" name="txtusername" value ="<?=$username?>" id="exampleFormControlInput1" placeholder="" required>
+                                                </div>
+                                                <div class="col-6">
+                                                <label for="txtpword" class="form-label">Password :</label>
+                                                <input type="password" class="form-control" name="txtpword" id="exampleFormControlInput1" placeholder="" value ="<?=$pword?>" required>
                                                 </div>
                                             </div>
                                 
-                                            <div class="mb-3">
-                                            <label for="exampleFormControlTextarea1" class="form-label">Story:</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" name="txtstory" rows="5" required><?=$story?></textarea>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label for="exampleFormControlInput1" class="form-label">Picture:</label>
-                                                <input type="file" class="form-control" name="picture" accept ="image/*" id="exampleFormControlInput1" >
-                                            </div>
                                             <button class="btn btn-primary">Submit</button>
                                         </form>
                                                      

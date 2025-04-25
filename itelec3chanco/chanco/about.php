@@ -1,6 +1,10 @@
 <?php
+    session_start();
     require_once("includes/dbconnect.php");
     
+    if(!(isset($_SESSION['userID']))){
+        header("location:login.php");
+    }
     
     if(isset($_GET['udid'])){
         $id = $_GET['udid'];
@@ -34,7 +38,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Tables - SB Admin</title>
+        <title>ITELEC - About</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <link href="css/styles.css" rel="stylesheet" />
