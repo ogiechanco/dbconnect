@@ -38,16 +38,33 @@ DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `newsID` int(10) unsigned NOT NULL auto_increment,
   `title` varchar(255) default NULL,
-  `author` varchar(255) default NULL,
+  `author` varchar(128) default NULL,
   `datePosted` date default NULL,
   `story` text,
   `picture` text,
   PRIMARY KEY  (`newsID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `news` */
 
-insert  into `news`(`newsID`,`title`,`author`,`datePosted`,`story`,`picture`) values (1,'b','b','2025-04-22','b',NULL),(2,'b','b','2025-04-22','b','2.jpeg'),(3,'sample about','sample lang','2025-04-22','hello news!','3.png'),(4,'sample','sample lang','2025-04-22','hello','4.png');
+insert  into `news`(`newsID`,`title`,`author`,`datePosted`,`story`,`picture`) values (1,'Test','Test','2025-04-22','Test',''),(2,'b','b','2025-04-22','b','2.jpg'),(3,'sample about','sample lang','2025-04-22','hello news!','3.jpg'),(4,'sample','sample lang','2025-04-22','hello','4.png'),(5,'sample','sample lang','2025-04-25','sample','5.jpg'),(6,'new','new','2025-04-25','new','6.');
+
+/*Table structure for table `users` */
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `userID` int(10) unsigned NOT NULL auto_increment,
+  `fname` varchar(128) default NULL,
+  `lname` varchar(128) default NULL,
+  `username` varchar(128) default NULL,
+  `pword` varchar(50) default NULL,
+  PRIMARY KEY  (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Data for the table `users` */
+
+insert  into `users`(`userID`,`fname`,`lname`,`username`,`pword`) values (1,'Ogie','chanco','user','9d4e1e23bd5b727046a9e3b4b7db57bd8d6ee684'),(2,'John','Dela Cruz','John','39222d81a107405cc011f2343708214fbb5941ac'),(3,'Test','Moto','Test','640ab2bae07bedc4c163f679a746f7ab7fb5d1fa');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
