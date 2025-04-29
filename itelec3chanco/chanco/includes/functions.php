@@ -5,18 +5,18 @@ function uploadOne($filename, $newname, $upload_directory) {
     if (is_uploaded_file($filename['tmp_name'])) {
         $uploadfile = $upload_directory.$newname.".".end(explode(".", $filename['name']));
         if (move_uploaded_file($filename['tmp_name'],$uploadfile)) {
-            return "File uploaded successfully!";
+            $res = "File uploaded successfully!";
         } else {
-            return "Error uploading file.";
+            $res ="Error uploading file.";
         }
     }
     return $res;
 }
 
-function cleantext($txt){
-    $cleantext = htmlspecialchars($txt);
-    $cleantext = trim($cleantext);
 
-    return $cleantext;
+function cleanText($str){
+    $strClean=trim($str);
+    $strClean=htmlspecialchars($strClean);
+    return $strClean;
 }
 ?>

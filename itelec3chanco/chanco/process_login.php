@@ -1,9 +1,10 @@
 
 <?php
+    session_start();
     require_once("includes/dbconnect.php");
     require_once("includes/functions.php");
 
-    $uname = $_POST['txtusername'];
+    $uname = cleanText($_POST['txtusername']);
     $pword = sha1($_POST['txtpword']);
 
     try {
@@ -14,7 +15,8 @@
         $row = $stmt->fetch();
         $counter = $stmt->rowCount();
         if($counter){
-            $_SESSION['userID'] = $row[0];
+            $_SESSION['userID']=$row[0];
+            $_SESSION['username']=$row[3];
             header("location:users.php");
         }else{
             header("location:login.php?try=1");

@@ -1,6 +1,9 @@
 <?php
+    session_start();
     require_once("includes/dbconnect.php");
-
+    if(!(isset($_SESSION['userID']))){
+        header("location:login.php");
+    }
     $id = 0;
     $fname = NULL;
     $lname = NULL;
